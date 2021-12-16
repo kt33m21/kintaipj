@@ -9,16 +9,23 @@
 
 
 /*ヘッダー部分*/
+
+body{
+  font-family:"游ゴシック";
+  width:1440px;
+  margin:0 auto;
+}
+
 .header-main{
-  width:1340px;
+  width:1220px;
   margin:0 auto;
   text-align:left;
 }
 
 /*メイン部分*/
 .contents-main{
-  width:1440px;
-  height:600px;
+  width:100%;
+  height:300px;
   background-color:#e7e7e7;
   margin:0 auto;
 
@@ -26,7 +33,7 @@
 
 
 /*フッター部分*/
-  .contents-box{
+  .footer-main{
     display:table;
     text-align:center;
     width:100%;
@@ -52,7 +59,7 @@
   </main>
 
   <footer>@yield('footer')
-    <div class="contents-box">
+    <div class="footer-main">
       <small>Atte,inc</small>
     </div>
   </footer>
