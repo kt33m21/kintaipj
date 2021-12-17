@@ -11,17 +11,9 @@ class RegisteredUserController extends Controller
 
     public function create(){
     $items = SystemUser::all();
-    return view('member_registration', ['items' => $items]);
+    return view('member_registration');
     }
 
-    public function search(Request $request)
-    {
-        $item = SystemUser::where('name','email','password','LIKE',"%{$request->input}%")->get();
-        $param = [
-            'input' => $request->input,
-            'item' => $items
-        ];
-    }
 
     public function store(Request $request)
     {
@@ -29,11 +21,9 @@ class RegisteredUserController extends Controller
         $this->validate($request, SystemUser::$rules);
         $form = $request->all();
         SystemUser::create($form);
-        return redirect('/completion');
-    }
-
-    public function action(){
         return view('registration_comp');
     }
+
+
 
 }
