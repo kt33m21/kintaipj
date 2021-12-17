@@ -57,15 +57,39 @@
           <div class="registration-rayouts">
             <input type="text" class="rayouts-form" placeholder="名前"  name="name">
           </div>
+      @error('name')
+      <tr>
+        <th>Error</th>
+        <td>{{$message}}</td>
+      </tr>
+      @enderror
           <div class="registration-rayouts">
             <input type="email" class="rayouts-form" placeholder="メールアドレス" name="email">
           </div>
+      @error('email')
+      <tr>
+        <th>Error</th>
+        <td>{{$message}}</td>
+      </tr>
+      @enderror
           <div class="registration-rayouts">
             <input type="password" class="rayouts-form" placeholder="パスワード" name="password">
           </div>
+      @error('password')
+      <tr>
+        <th>Error</th>
+        <td>{{$message}}</td>
+      </tr>
+      @enderror
           <div class="registration-rayouts">
             <input type="password" class="rayouts-form" placeholder="確認用パスワード">
           </div>
+      @error('password')
+      <tr>
+        <th>Error</th>
+        <td>{{$message}}</td>
+      </tr>
+      @enderror
           <div class="registration-button">
             <input type="submit" value="会員登録" class="rayouts-button">
           </div>

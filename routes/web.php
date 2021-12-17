@@ -5,6 +5,6 @@ use App\Http\Controllers\RegisteredUserController;
 
 Route::get('/register',[RegisteredUserController::class,'create']);
 Route::post('/completion',[RegisteredUserController::class,'store']);
-
+Route::get('/completion',[RegisteredUserController::class,'action']);
 
 

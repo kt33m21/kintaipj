@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 
 class RegisteredUserController extends Controller
 {
-    public function test(){
-        return view('test');
-    }
 
     public function create(){
     $items = SystemUser::all();
@@ -32,8 +29,11 @@ class RegisteredUserController extends Controller
         $this->validate($request, SystemUser::$rules);
         $form = $request->all();
         SystemUser::create($form);
-        return redirect('registration_comp');
+        return redirect('/completion');
     }
 
+    public function action(){
+        return view('registration_comp');
+    }
 
 }
