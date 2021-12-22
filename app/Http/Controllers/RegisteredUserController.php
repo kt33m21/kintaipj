@@ -15,7 +15,7 @@ class RegisteredUserController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
         $items = SystemUser::all();
         $this->validate($request, SystemUser::$rules);

@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
 <style>
-  /*登録フォームのメイン部分*/
+  /*ログインフォームのメイン部分*/
 
   .contents-main{
     text-align:center;
     display:table;
-    padding-top:30px;
-    padding-bottom:30px;
+    padding-top:70px;
+    padding-bottom:62px;
   }
 
 .contents-main-box{
@@ -49,18 +49,10 @@
   <div class="contents-main">
     <div class="contents-main-box">
       <div class="registration-title">
-        <p class="registration-title-main">会員登録</p>
+        <p class="registration-title-main">ログイン</p>
       </div>
-        <form action="{{ url('/completion')}}" method="post">
+        <form action="{{url('/home')}}" method="post">
           @csrf
-          <div class="registration-rayouts">
-            <input type="text" class="rayouts-form" placeholder="名前"  name="name" value="{{ old('name') }}">
-          </div>
-      @error('name')
-      <tr>
-      {{$message}}
-      </tr>
-      @enderror
           <div class="registration-rayouts">
             <input type="email" class="rayouts-form" placeholder="メールアドレス" name="email" value="{{ old('email') }}">
           </div>
@@ -77,24 +69,16 @@
       {{$message}}
       </tr>
       @enderror
-          <div class="registration-rayouts">
-            <input type="password" class="rayouts-form" placeholder="確認用パスワード" name="password_confirmation">
-          </div>
-      @error('password_confirmation')
-      <tr>
-      {{$message}}
-      </tr>
-      @enderror
           <div class="registration-button">
-            <input type="submit" value="会員登録" class="rayouts-button">
+            <input type="submit" value="ログイン" class="rayouts-button">
           </div>
         </form>
-        <p>アカウントをお持ちの方はこちらから</p>
-        <a href='/login'>ログイン</a>
+        <p>アカウントをお持ちでない方はこちらから</p>
+        <a href='/register'>会員登録</a>
     </div>
   </div>
 </main>
-  @endsection
+@endsection
 
 @section('footer')
 @endsection
