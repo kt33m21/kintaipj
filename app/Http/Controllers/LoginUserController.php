@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SystemUser;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
@@ -9,20 +10,24 @@ use Illuminate\Support\Facades\Auth;
 class LoginUserController extends Controller
 {
     public function login(){
+        $items = SystemUser::all();
         return view('login');
     }
 
     public function execution(LoginRequest $request){
-        $credentials = $request->only('email','password');
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-        if(Auth::attempt($credentials)){
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect('home')->with('login_success','ログインに成功しました!');
+            return redirect()->intended('dashboard');
         }
 
-            return back()->withErrors([
-            'login_error' => 'メールアドレスかパスワードが間違っています。',
+        return back()->withErrors([
+            'email' => 'メールアドレスかパスワードが間違っています。',
         ]);
     }
 }

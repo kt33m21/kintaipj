@@ -33,7 +33,7 @@
       <div class="comp-title">
         <p class="comp-title-main">アカウント登録完了しました</p>
       </div>
-        <a href="#">ログインへ</a>
+        <a href="/login">ログインへ</a>
     </div>
   </div>
 </main>
