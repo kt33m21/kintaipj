@@ -8,5 +8,13 @@
 </head>
 <body>
   <p>ログイン成功しました</p>
+
+  @auth
+  <p>ログインユーザーに表示する。</p>
+@endauth
+
+@guest
+  <p>ログインしていないユーザーに表示する。</p>
+@endguest
 </body>
 </html>

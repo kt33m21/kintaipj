@@ -14,21 +14,13 @@ class RegisteredUserController extends Controller
     return view('member_registration');
     }
 
-
     public function store(RegisterRequest $request)
     {
-        $this->validate($request, SystemUser::$rules);
-        $form = $request->all();
-        SystemUser::create($form);
-        return view('registration_comp');
 
-            $user = SystemUser::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-    ]);
+    $user = SystemUser::create([
+    'name' => $request->name,
+    'email' => $request->email,
+    'password' => Hash::make($request->password),]);
+    return view('registration_comp');
     }
-
-
-
 }

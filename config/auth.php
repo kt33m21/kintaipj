@@ -108,4 +108,35 @@ return [
 
     'password_timeout' => 10800,
 
+'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'users' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'SystemUsers' => [
+            'driver' => 'session',
+            'provider' => 'SystemUsers',
+        ],
+    ],
+
+
+
+'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\SystemUser::class,
+        ],
+            'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+    ],
+
 ];
+

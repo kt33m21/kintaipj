@@ -8,4 +8,5 @@ use Illuminate\Http\Request;
 Route::get('/register',[RegisteredUserController::class,'create']);
 Route::post('/completion',[RegisteredUserController::class,'store']);
 Route::get('/login',[LoginUserController::class,'login']);
+Route::get('home',[LoginUserController::class,'top']);
 Route::post('/home',[LoginUserController::class,'execution']);

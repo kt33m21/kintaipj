@@ -31,4 +31,8 @@ class LoginUserController extends Controller
             'email' => 'メールアドレスかパスワードが間違っています。',
         ]);
     }
+
+    public function top(){
+        return view('home');
+    }
 }
