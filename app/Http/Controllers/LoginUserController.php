@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class LoginUserController extends Controller
 {
     public function login(){
-        $items = SystemUser::all();
         return view('login');
     }
 
@@ -19,11 +18,13 @@ class LoginUserController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
+        var_dump($credentials);
+
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('home');
         }
 
         return back()->withErrors([
