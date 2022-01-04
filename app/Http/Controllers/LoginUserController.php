@@ -18,15 +18,12 @@ class LoginUserController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        var_dump($credentials);
 
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
             return redirect()->intended('home');
         }
-
         return back()->withErrors([
             'email' => 'メールアドレスかパスワードが間違っています。',
         ]);
@@ -35,4 +32,16 @@ class LoginUserController extends Controller
     public function top(){
         return view('home');
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
+    }
+
 }
