@@ -16,16 +16,18 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        $timestampstart = Carbon::today();
 
 
         $timestamp = Attendance::create([
             'system_user_id' => $user->id,
-            'start_time' => Carbon::now()
+            'start_time' => Carbon::now()->date->format('Y-m-d')
         ]);
 
     //1日1回しか押せないようにする
-        if($timestampstart == $timestamp){
+
+        $timestampstart = Carbon::today()->format('Y-m-d');
+
+        if($timestampstart ->eq($timestamp->start_time)){
         return redirect->with('error', 'すでに打刻済の為、押せません');
     }
 
