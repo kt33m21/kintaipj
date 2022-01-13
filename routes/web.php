@@ -19,15 +19,24 @@ Route::post('/home',[LoginUserController::class,'execution']);
 Route::group(['middleware' => ['auth']], function () {
 Route::get('/home',[LoginUserController::class,'top']);
 Route::post('logout', [LoginUserController::class, 'logout'])->name('logout');
+//勤怠一覧表示画面//
+Route::get('/list',[AttendanceController::class, 'AttendanceList']);
+Route::get('/', [AttendanceController::class, 'LoginAttendance']);
 });
+
+
+//勤怠管理画面//
+
+//当日退勤打刻押されなかった場合//
+
 
 //勤務開始//
 Route::post('/attendance/start', [AttendanceController::class, 'attendanceWork'])->name('/attendance/start');
 //勤務終了//
 Route::post('/attendance/end', [AttendanceController::class, 'leavingWork'])->name('/attendance/end');
 //休憩開始//
-Route::post('/attendance/reststart', [AttendanceController::class, 'reststartWork'])->name('/attendance/reststart');
+Route::post('/attendance/reststart', [AttendanceController::class, 'restStartWork'])->name('/attendance/reststart');
 //休憩終了//
-Route::post('/attendance/restend', [AttendanceController::class, 'restendWork'])->name('/attendance/restend');
+Route::post('/attendance/restend', [AttendanceController::class, 'restEndWork'])->name('/attendance/restend');
 
-//Route::get('/attendance/attendance', [AttendanceController::class, 'AttendanceList'])->name('/attendance/attendance');//
+

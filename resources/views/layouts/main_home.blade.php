@@ -80,7 +80,7 @@ a{
       <h1 class="title-logo">Atte</h1>
       <ul class="header-main-list">
         <li><a href="/home">ホーム</a></li>
-        <li><a href="">日付一覧</a></li>
+        <li><a href="/list">日付一覧</a></li>
       </ul>
   <a href="#" onclick="document.getElementById('logout-form').submit();" class="logout-title">ログアウト</a>
   <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

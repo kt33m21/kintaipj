@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\SystemUser;
 use App\Models\Attendance;
+use App\Models\Rest;
 use Carbon\Carbon;
 
 class AttendanceController extends Controller
@@ -17,104 +18,85 @@ class AttendanceController extends Controller
         $user = Auth::user();
 
 
+        //当日の打刻状態を確認し、レコードが存在する場合は　Carbon::today型と形式を合わせる
+        $oldTimeStamp = Attendance::where('system_user_id', $user->id)->latest()->first();
+        if ($oldTimeStamp) {
+            $oldTimeStampStart = new Carbon($oldTimeStamp->start_time);
+            $oldTimeStampDay = $oldTimeStampStart->startOfDay();
+        }
+        $newTimeStampDay = Carbon::today();
 
-        $timestamp = Attendance::create([
+        //当日勤務開始押済で、end_timeが入っていない場合はエラーを返す
+        if ((isset($oldTimeStampDay) == $newTimeStampDay) && (empty($oldTimeStamp->end_time))) {
+            return redirect()->back()->with('error', 'すでに出勤打刻がされています。');
+        }
+        //勤務開始ボタン押下時、attendancesレコードのstart_timeに現時刻を投入
+        $timeStamp = Attendance::create([
             'system_user_id' => $user->id,
-            'start_time' => Carbon::now()->date->format('Y-m-d')
-        ]);
-
-    //1日1回しか押せないようにする
-
-        $timestampstart = Carbon::today()->format('Y-m-d');
-
-        if($timestampstart ->eq($timestamp->start_time)){
-        return redirect->with('error', 'すでに打刻済の為、押せません');
-    }
-
-        return redirect()->back()->with('status', '出勤打刻が完了しました。');
+            'start_time' => Carbon::now()
+            ]);
+        return redirect()->back()->with('my_status', '出勤打刻が完了しました。');
     }
 
     //退勤処理
     public function leavingWork()
     {
         $user = Auth::user();
-        $timestamp = Attendance::where('system_user_id', $user->id)->latest()->first();
 
-        if (!empty($timestamp->punchOut)) {
-            return redirect()->back()->with('error', '既に退勤の打刻がされているか、出勤が打刻されていません。');
-        } else {
-            $timestamp->update([
-                'end_time' => Carbon::now()
-            ]);
+        $timeStamp = Attendance::where('system_user_id', $user->id)->latest()->first();
 
-            return redirect()->back()->with('status', '退勤打刻が完了しました。');
-        }
-    }
-
-
-    //休憩開始処理
-    public function reststartWork()
-    {
-        $user = Auth::user();
-
-        $startattendance = Attendance::where('system_user_id', $user->id)->latest()->first();
-
-        $timestamp = Rest::create([
-            'system_user_id' => $user->id,
-            'attendance_id' => $startattendance->id,
-            'start_time' => Carbon::now(),
-        ]);
-
-        return redirect()->back()->with('status', '休憩開始打刻が完了しました。');
-    }
-
-    //休憩終了処理
-    public function restendWork()
-    {
-        $user = Auth::user();
-        $timestamp = Rest::where('system_user_id', $user->id)->latest()->first();
-        $attendance = Attendance::where('system_user_id', $user->id)->latest()->first();
-
-        if (!empty($timestamp->punchOut)) {
-            return redirect()->back()->with('error', '既に休憩終了の打刻がされているか、休憩開始が打刻されていません。');
-        }
-
-        $timestamp->update([
+        $timeStamp->update([
             'end_time' => Carbon::now()
-        ]);
-
-        //休憩時間取得
-        $timestamp = Rest::where('system_user_id', $user->id)->latest()->first();
-
-        // print($timestamp);
-
-        $data = Rest::select(DB::raw('timediff(end_time,start_time) as resttime'))->where('id', $timestamp->id)->value('resttime');
-
-        // print($data);
-
-        //休憩時間合算
-        //attendanceテーブルの休憩時間現在値取得
-        // print($timestamp->id);
-        $restdata = Attendance::select(DB::raw('rest_time'))->where('id', $timestamp->attendance_id)->value('rest_time');
-
-        // print($restdata);
-
-
-        $sum = DB::select('select addtime(:restdata, :data) as sum', ['restdata' => $restdata, 'data' => $data]);
-
-        // var_dump($sum);
-        print($sum);
-
-        $attendance->update([
-            'rest_time' => $sum
-        ]);
-
-        return redirect()->back()->with('status', '休憩終了時間打刻が完了しました。');
+            ]);
+        return redirect()->back()->with('my_status', '退勤打刻が完了しました。');
     }
 
-    //public function AttendanceList()
-    //{
-    //    return view('attendance');
-    //    }
+    //休憩開始処置
+    public function restStartWork()
+    {
+        $user = Auth::user();
+
+
+        //当日の打刻状態を確認し、レコードが存在する場合は　Carbon::today型と形式を合わせる
+        $oldTimeStamp = Rest::where('system_user_id', $user->id)->latest()->first();
+        if ($oldTimeStamp) {
+            $oldTimeStampStart = new Carbon($oldTimeStamp->start_time);
+            $oldTimeStampDay = $oldTimeStampStart->startOfDay();
+        }
+        $newTimeStampDay = Carbon::today();
+
+        //当日休憩開始押済で、end_timeが入っていない場合はエラーを返す
+        if ((isset($oldTimeStampDay) == $newTimeStampDay) && (empty($oldTimeStamp->end_time))) {
+            return redirect()->back()->with('error', 'すでに休憩開始打刻がされています。');
+        }
+        //勤務開始ボタン押下時、Restレコードのstart_timeに現時刻を投入
+        $timeStamp = Rest::create([
+            'system_user_id' => $user->id,
+            'start_time' => Carbon::now()
+            ]);
+        return redirect()->back()->with('my_status', '休憩開始が完了しました。');
+    }
+
+    //休憩終了
+    public function restEndWork()
+    {
+        $user = Auth::user();
+
+        $timeStamp = Rest::where('system_user_id', $user->id)->latest()->first();
+
+        $timeStamp->update([
+            'end_time' => Carbon::now()
+            ]);
+        return redirect()->back()->with('my_status', '退勤打刻が完了しました。');
+    }
+
+
+    public function AttendanceList(Request $request)
+    {
+        $user = Auth::user();
+        $date = Carbon::today()->format("Y-m-d");
+        $items = Attendance::whereDate('start_time', $date)->paginate(5);
+        return view('list', ['items' => $items],['today' => $date]);
+    }
 }
 
