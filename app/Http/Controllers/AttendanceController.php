@@ -54,24 +54,13 @@ class AttendanceController extends Controller
     //休憩開始処置
     public function restStartWork()
     {
+
         $user = Auth::user();
 
+        $timeStamp = Rest::where('attendance_id', $user->id)->latest()->first();
 
-        //当日の打刻状態を確認し、レコードが存在する場合は　Carbon::today型と形式を合わせる
-        $oldTimeStamp = Rest::where('system_user_id', $user->id)->latest()->first();
-        if ($oldTimeStamp) {
-            $oldTimeStampStart = new Carbon($oldTimeStamp->start_time);
-            $oldTimeStampDay = $oldTimeStampStart->startOfDay();
-        }
-        $newTimeStampDay = Carbon::today();
-
-        //当日休憩開始押済で、end_timeが入っていない場合はエラーを返す
-        if ((isset($oldTimeStampDay) == $newTimeStampDay) && (empty($oldTimeStamp->end_time))) {
-            return redirect()->back()->with('error', 'すでに休憩開始打刻がされています。');
-        }
         //勤務開始ボタン押下時、Restレコードのstart_timeに現時刻を投入
         $timeStamp = Rest::create([
-            'system_user_id' => $user->id,
             'start_time' => Carbon::now()
             ]);
         return redirect()->back()->with('my_status', '休憩開始が完了しました。');
@@ -82,11 +71,12 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        $timeStamp = Rest::where('system_user_id', $user->id)->latest()->first();
+        $timeStamp = Rest::where('attendance_id', $user->id)->latest()->first();
 
         $timeStamp->update([
             'end_time' => Carbon::now()
             ]);
+
         return redirect()->back()->with('my_status', '退勤打刻が完了しました。');
     }
 
@@ -95,7 +85,9 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $date = Carbon::today()->format("Y-m-d");
-        $items = Attendance::whereDate('start_time', $date)->paginate(5);
+        $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5)->items();
+        
+        //dump($items);
         return view('list', ['items' => $items],['today' => $date]);
     }
 }

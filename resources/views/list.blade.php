@@ -11,10 +11,20 @@
   font-size:20px;
 }
 
+.today-contents{
+  margin-bottom:80px;
+}
+
 
 th{
-  vertical-align:center;
-  padding:15px;
+  padding-left:150px;
+  padding-bottom:15px;
+
+}
+
+td{
+  padding-left:150px;
+  padding-bottom:15px;
 }
 
 
@@ -40,10 +50,11 @@ th{
     </tr>
     @foreach($items as $item)
     <tr>
-        <td>{{ $item->system_user_id }}</td>
+        <td>{{ $item->name }}</td>
         <td>{{ $item->start_time}}</td>
         <td>{{ $item->end_time }}</td>
         <td>{{ $item->rest_time }}</td>
+        <td>{{ gmdate('H時間i分s秒',strtotime($item->end_time)-strtotime($item->start_time))}}</td>
     </tr>
     @endforeach
 </table>

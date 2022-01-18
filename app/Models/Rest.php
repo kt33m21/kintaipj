@@ -10,11 +10,11 @@ class Rest extends Model
     use HasFactory;
     protected $table = 'rests';
 
-    protected $fillable = ['system_user_id', 'start_time', 'end_time'];
+    protected $fillable = ['attendance_id', 'start_time', 'end_time'];
 
-    public function systemuser()
+    public function attendance()
     {
-        $this->belongsTo(SystemUser::class);
+        $this->belongsTo(Attendance::class);
     }
 }
 

@@ -15,7 +15,7 @@ class CreateRestTable extends Migration
     {
         Schema::create('rests', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('system_user_id')->constrained('system_users');
+            $table->foreignId('attendance_id')->constrained('attendances');
             $table->datetime('start_time');
             $table->datetime('end_time')->nullable();
             $table->timestamp('created_at')->useCurrent()->nullable();
