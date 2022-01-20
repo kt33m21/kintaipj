@@ -51,10 +51,10 @@ td{
     @foreach($items as $item)
     <tr>
         <td>{{ $item->name }}</td>
-        <td>{{ $item->start_time}}</td>
-        <td>{{ $item->end_time }}</td>
+        <td>{{ substr($item->start_time,10)}}</td>
+        <td>{{ substr($item->end_time,10) }}</td>
         <td>{{ $item->rest_time }}</td>
-        <td>{{ gmdate('H時間i分s秒',strtotime($item->end_time)-strtotime($item->start_time))}}</td>
+        <td>{{ gmdate('H:i:s',strtotime($item->end_time)-strtotime($item->start_time))}}</td>
     </tr>
     @endforeach
 </table>
