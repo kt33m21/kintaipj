@@ -39,4 +39,7 @@ Route::post('/attendance/reststart', [AttendanceController::class, 'restStartWor
 //休憩終了//
 Route::post('/attendance/restend', [AttendanceController::class, 'restEndWork'])->name('/attendance/restend');
 
+//ページネーション//
+Route::post('/attendance/attendance', [AttendanceController::class, 'NextDay'])->name('/attendance/attendance');
+
 

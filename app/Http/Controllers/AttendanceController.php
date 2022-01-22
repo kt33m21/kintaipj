@@ -106,18 +106,35 @@ class AttendanceController extends Controller
 
         $attendance =Attendance::where('system_user_id',$user_id)->latest()->first();
         $timeStamp = Rest::where('attendance_id', $attendance->id)->latest()->first();
-        
 
         //休憩時間合計処理
-        $restStartTimeData = $timeStamp->sum('start_time');
-        $restEndTimeData = $timeStamp->sum('end_time');
+        //$items = DB::table('rests')->selectRaw('data_format(start_time,"%Y%m%d")'->as('today,attendance_id')->selectRaw('SUM(end_time-start_time')->as('rest_time')->groupBy('attendance_id,today')->get());
 
-        $restTotalTimeData = $restEndTimeData-$restStartTimeData;
+        $items = DB::table('rests')->selectRaw(date_format('start_time,"%Y%m%d" as today'));
+
+        dump($items);
+
 
         //ビューページのitemsを定義
         $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5)->items();
-        
         return view('list', ['items' => $items],['today' => $date]);
+    }
+
+
+    public function NextDay(Request $request)
+    {
+        $nowdate = $request->input('today');
+        $dayflg = $request->input('dayflg');
+
+        if ($dayflg == "next") {
+            $date = date("Y-m-d", strtotime($nowdate . "+1 day"));
+        } else if ($dayflg == "back") {
+            $date = date("Y-m-d", strtotime($nowdate . "-1 day"));
+        }
+
+        $user = Auth::user();
+        $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5)->items();
+        return view('list', ['today' => $date],['items' => $items], ['today' => $date]);
     }
 }
 

@@ -49,7 +49,7 @@
               <form action="{{route('/attendance/start')}}" method="POST">
                   @csrf
                   @method('POST')
-                  <button type="submit" id="btn_start" class="btn">勤務開始</button>
+                  <button type="submit" id="btn_start" class="btn" >勤務開始</button>
               </form>
           </li>
           <li class="timebtn" id="btn_end">
@@ -86,4 +86,6 @@ window.setInterval( function() {
   // ID名timerの要素の内容に、現在時刻を出力
   document.getElementById( "timer" ).innerHTML = new Date().toLocaleString();
 }, 1000 );
+
+
 </script>

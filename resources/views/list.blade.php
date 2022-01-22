@@ -5,16 +5,15 @@
   text-align:center;
 }
 
+.day-list{
+  color:blue;
+}
+
+
 .today-contents{
-  padding-top:10px;
   font-weight:bold;
   font-size:20px;
 }
-
-.today-contents{
-  margin-bottom:80px;
-}
-
 
 th{
   padding-left:150px;
@@ -36,8 +35,28 @@ td{
 @section('contents')
 
 <div class="contents-main">
+
 <div class="contents-box">
-<div class="today-contents">{{ $today }}</div>
+  <div class="arrow-button-back">
+    <form action="{{route('/attendance/attendance')}}" method="post">
+        @csrf
+        <input type="hidden" class="form-control" id="today" name="today" value={{ $today }}>
+        <input type="hidden" class="flg" name="dayflg" value="back">
+        <input type="submit" name="" value="<" class="day-list" id="back_btn">
+    </form>
+  </div>
+
+  <div class="today-contents">{{ $today }}</div>
+
+  <div class="arrow-button-next">
+    <form action="{{route('/attendance/attendance')}}" method="post">
+        @csrf
+        <input type="hidden" class="form-control" id="today" name="today" value={{ $today }}>
+        <input type="hidden" class="flg" name="dayflg" value="next">
+        <input type="submit" name="" value=">" class="day-list" id="next_btn">
+    </form>
+  </div>
+
 </div>
 
 <table>
@@ -58,7 +77,6 @@ td{
     </tr>
     @endforeach
 </table>
-
 </div>
 @endsection
 
