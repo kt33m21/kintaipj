@@ -110,14 +110,16 @@ class AttendanceController extends Controller
         //休憩時間合計処理
         //$items = DB::table('rests')->selectRaw('data_format(start_time,"%Y%m%d")'->as('today,attendance_id')->selectRaw('SUM(end_time-start_time')->as('rest_time')->groupBy('attendance_id,today')->get());
 
-        $items = DB::table('rests')->selectRaw(date_format('start_time,"%Y%m%d" as today'));
+        $rests = DB::table('rests')->selectRaw('date_format(start_time,"%Y%m%d") as today')
+                    ->selectRaw('sum(end_time-start_time) as rest_time')
+                    ->groupBy('attendance_id','today')
+                    ->get();
 
-        dump($items);
-
+                    dump($rests);
 
         //ビューページのitemsを定義
         $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5)->items();
-        return view('list', ['items' => $items],['today' => $date]);
+        return view('list', ['items' => $items],['today' => $date],['rests' => $rests]);
     }
 
 
@@ -126,6 +128,20 @@ class AttendanceController extends Controller
         $nowdate = $request->input('today');
         $dayflg = $request->input('dayflg');
 
+        $user = Auth::user();
+        $user_id = Auth::id();
+
+        $attendance =Attendance::where('system_user_id',$user_id)->latest()->first();
+        $timeStamp = Rest::where('attendance_id', $attendance->id)->latest()->first();
+
+        $rests = DB::table('rests')->selectRaw('date_format(start_time,"%Y%m%d") as today')
+                    ->selectRaw('sum(end_time-start_time) as rest_time')
+                    ->groupBy('attendance_id','today')
+                    ->get()->items();
+
+        $rests_data = $rests->input('rests');
+
+    
         if ($dayflg == "next") {
             $date = date("Y-m-d", strtotime($nowdate . "+1 day"));
         } else if ($dayflg == "back") {
@@ -134,7 +150,7 @@ class AttendanceController extends Controller
 
         $user = Auth::user();
         $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5)->items();
-        return view('list', ['today' => $date],['items' => $items], ['today' => $date]);
+        return view('list', ['today' => $date],['items' => $items], ['today' => $date],['rests' =>$rest ]);
     }
 }
 
