@@ -67,15 +67,13 @@ td{
         <th>休憩時間</th>
         <th>勤務時間</th>
     </tr>
-    @foreach($attendances as $attendance)
+    @foreach($items as $item)
     <tr>
-        <td>{{ $attendance->name }}</td>
-        <td>{{ substr($attendance->start_time,10)}}</td>
-        <td>{{ substr($attendance->end_time,10) }}</td>
-        @foreach($rests as $rest)
-        {{--<td>{{ $rest->rest_time }}</td>--}}
-        @endforeach
-        <td>{{ gmdate('H:i:s',(strtotime($attendance->end_time))-strtotime($attendance->start_time))}}</td>
+        <td>{{ $item->name }}</td>
+        <td>{{ substr($item->start_time,10)}}</td>
+        <td>{{ substr($item->end_time,10) }}</td>
+        <td></td>
+        <td>{{ gmdate('H:i:s',strtotime($item->end_time)-strtotime($item->start_time))}}</td>
     </tr>
     @endforeach
 </table>
