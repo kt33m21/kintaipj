@@ -115,7 +115,7 @@ class AttendanceController extends Controller
 
 
         //ビューページのitemsを定義
-        $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5)->items();
+        $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5);
         return view('list', ['items' => $items],['today' => $date]);
     }
 
@@ -140,9 +140,9 @@ public function NextDay(Request $request)
         $rests = DB::table('rests')->selectRaw('date_format(start_time,"%Y%m%d") as today')
                     ->selectRaw('sum(end_time-start_time) as rest_time')
                     ->groupBy('attendance_id','today')
-                    ->get()->items();
+                    ->get();
 
-        $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5)->items();
+        $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5);
         return view('list', ['today' => $date],['items' => $items]);
     }
 }
