@@ -107,21 +107,25 @@ class AttendanceController extends Controller
         $attendance =Attendance::where('system_user_id',$user_id)->latest()->first();
         $timeStamp = Rest::where('attendance_id', $attendance->id)->latest()->first();
 
-
+        //休憩時間の合計をattendance_id毎に取り出す
         $rests = DB::table('rests')->selectRaw('date_format(start_time,"%Y%m%d") as today')
                     ->selectRaw('sum(end_time-start_time) as rest_time')
-                    ->groupBy('attendance_id','today')
+                    //->select('attendance_id')
+                    //->groupBy('attendance_id','today')
                     ->get();
 
 
-        //ビューページのitemsを定義
+        //ビューページで1ページあたり5名分まで表示させる
         $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5);
+        //ビューで表示させる際の変数を定義
         return view('list', ['items' => $items],['today' => $date]);
     }
 
 
 public function NextDay(Request $request)
     {
+
+        //日付毎のページネーションを設定
         $nowdate = $request->input('today');
         $dayflg = $request->input('dayflg');
 
@@ -137,12 +141,17 @@ public function NextDay(Request $request)
         $attendance =Attendance::where('system_user_id',$user_id)->latest()->first();
         $timeStamp = Rest::where('attendance_id', $attendance->id)->latest()->first();
 
+        //休憩時間の合計をattendance_id毎に取り出す
         $rests = DB::table('rests')->selectRaw('date_format(start_time,"%Y%m%d") as today')
                     ->selectRaw('sum(end_time-start_time) as rest_time')
-                    ->groupBy('attendance_id','today')
+                    //->select('attendance_id')
+                    //->groupBy('attendance_id','today')
                     ->get();
 
+
+        //ビューページで1ページあたり5名分まで表示させる
         $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5);
+        //ビューで表示させる際の変数を定義
         return view('list', ['today' => $date],['items' => $items]);
     }
 }
