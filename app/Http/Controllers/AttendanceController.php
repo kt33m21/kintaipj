@@ -15,8 +15,8 @@ class AttendanceController extends Controller
     //勤務開始処置
     public function attendanceWork()
     {
-        $user = Auth::user();
 
+        $user = Auth::user();
 
         //当日の打刻状態を確認し、レコードが存在する場合は　Carbon::today型と形式を合わせる
         $oldTimeStamp = Attendance::where('system_user_id', $user->id)->latest()->first();
@@ -111,9 +111,10 @@ class AttendanceController extends Controller
         $rests = DB::table('rests')->selectRaw('date_format(start_time,"%Y%m%d") as today')
                     ->selectRaw('sum(end_time-start_time) as rest_time')
                     //->select('attendance_id')
-                    //->groupBy('attendance_id','today')
+                    ->groupBy('attendance_id','today')
                     ->get();
 
+        dump($rests);
 
         //ビューページで1ページあたり5名分まで表示させる
         $items = Attendance::whereDate('start_time', $date)->join('system_users','system_users.id','=','attendances.system_user_id')->paginate(5);

@@ -49,28 +49,28 @@
               <form action="{{route('/attendance/start')}}" method="POST">
                   @csrf
                   @method('POST')
-                  <button type="submit" id="btn_start" class="btn" >勤務開始</button>
+                  <button type="submit" id="btn_start" class="btn" <?php if("btn_display['btn_start_attendance']" == false){ ?> disabled <?php } ?> >勤務開始</button>
               </form>
           </li>
           <li class="timebtn" id="btn_end">
               <form action="{{route('/attendance/end')}}" method="POST">
                   @csrf
                   @method('POST')
-                  <button type="submit" id="btn_end" class="btn">勤務終了</button>
+                  <button type="submit" id="btn_end" class="btn" <?php if("btn_display['btn_end_attendance']" == false){ ?> disabled <?php } ?>>勤務終了</button>
               </form>
           </li>
           <li class="timebtn" id="btn_rest_start">
               <form action="{{route('/attendance/reststart')}}" method="POST">
                   @csrf
                   @method('POST')
-                  <button type="submit" id="btn_rest_start" class="btn">休憩開始</button>
+                  <button type="submit" id="btn_rest_start" class="btn" <?php if("btn_display['btn_start_rest']" == false){ ?> disabled <?php } ?>>休憩開始</button>
               </form>
           </li>
           <li class="timebtn" id="btn_rest_end">
               <form action="{{route('/attendance/restend')}}" method="POST">
                   @csrf
                   @method('POST')
-                  <button type="submit" id="btn_rest_end" class="btn">休憩終了</button>
+                  <button type="submit" id="btn_rest_end" class="btn" <?php if("btn_display['btn_start_rest']" == false){ ?> disabled <?php } ?>>休憩終了</button>
               </form>
           </li>
    </ul>
